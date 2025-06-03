@@ -79,7 +79,7 @@ app.get('/api/qrcode/:room', async (req, res) => {
   }
 });
 
-const staticPath = path.join(__dirname, '../client/dist');
+const staticPath = path.join(__dirname, 'client/dist');
 app.use(express.static(staticPath));
 app.use((_, res) => {
   res.sendFile(path.join(staticPath, 'index.html'));
