@@ -1,12 +1,24 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AppLayout from './layout/AppLayout';
+import Client from './pages/Client';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
   return (
-    <AppLayout>
-      <h1 className="text-2xl font-semibold">TailAdmin Dashboard</h1>
-      <p className="mt-2 text-gray-600">Integrating TailAdmin styles with React.</p>
-    </AppLayout>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Client />} />
+        <Route
+          path="/admin"
+          element={(
+            <AppLayout>
+              <Admin />
+            </AppLayout>
+          )}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

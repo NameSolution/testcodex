@@ -5,7 +5,7 @@ const map01 = () => {
   const mapSelectorOne = document.querySelectorAll("#mapOne");
 
   if (mapSelectorOne.length) {
-    const mapOne = new jsVectorMap({
+    new jsVectorMap({
       selector: "#mapOne",
       map: "world",
       zoomButtons: false,

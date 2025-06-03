@@ -46,7 +46,7 @@ flatpickr(".datepicker", {
 const dropzoneArea = document.querySelectorAll("#demo-upload");
 
 if (dropzoneArea.length) {
-  let myDropzone = new Dropzone("#demo-upload", { url: "/file/post" });
+  new Dropzone("#demo-upload", { url: "/file/post" });
 }
 
 // Document Loaded
