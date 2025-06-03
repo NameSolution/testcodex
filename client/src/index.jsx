@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
 } from 'react-router-dom';
 import ClientApp from './ClientApp';
 import AdminApp from './AdminApp';
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
     <Routes>
       <Route path="/client" element={<ClientApp />} />
       <Route path="/admin" element={<AdminApp />} />
+      <Route path="/" element={<Navigate to="/client" replace />} />
     </Routes>
   </Router>
 );
