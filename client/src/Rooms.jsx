@@ -3,20 +3,23 @@ import React, { useEffect, useState } from 'react';
 export default function Rooms() {
   const [rooms, setRooms] = useState([]);
   const [number, setNumber] = useState('');
+  const token = localStorage.getItem('adminToken');
 
   useEffect(() => {
     loadRooms();
   }, []);
 
   function loadRooms() {
-    fetch('/api/rooms').then(res => res.json()).then(setRooms);
+    fetch('/api/rooms', { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res.json())
+      .then(setRooms);
   }
 
   function addRoom() {
     if (!number) return;
     fetch('/api/rooms', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ number })
     })
       .then(res => res.json())

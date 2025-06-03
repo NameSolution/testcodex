@@ -14,10 +14,10 @@ import './index.css';
 createRoot(document.getElementById('root')).render(
   <Router>
     <Routes>
-      <Route path="/client" element={<ClientApp />} />
+      <Route path="/client/:room" element={<ClientApp />} />
       <Route path="/admin/*" element={<AdminApp />} />
       <Route path="/info" element={<InfoPanel />} />
-      <Route path="/" element={<Navigate to="/client" replace />} />
+      <Route path="/" element={<Navigate to="/client/101" replace />} />
     </Routes>
   </Router>
 );

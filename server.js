@@ -5,6 +5,7 @@ const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const QRCode = require('qrcode');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,6 +13,14 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 app.use(cors());
 app.use(express.json());
+
+const ADMIN_PASS = process.env.ADMIN_PASS || 'admin';
+
+function adminAuth(req, res, next) {
+  const token = req.headers.authorization;
+  if (token === `Bearer ${ADMIN_PASS}`) return next();
+  res.status(401).json({ error: 'unauthorized' });
+}
 
 const db = new sqlite3.Database(path.join(__dirname, 'hotel.db'));
 
@@ -42,7 +51,16 @@ function broadcastUpdate() {
   });
 }
 
-app.get('/api/requests', (req, res) => {
+app.post('/api/login', (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASS) {
+    res.json({ token: ADMIN_PASS });
+  } else {
+    res.status(401).json({ error: 'invalid' });
+  }
+});
+
+app.get('/api/requests', adminAuth, (req, res) => {
   db.all('SELECT * FROM requests ORDER BY created_at DESC', (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
@@ -58,7 +76,7 @@ app.post('/api/requests', (req, res) => {
   });
 });
 
-app.put('/api/requests/:id', (req, res) => {
+app.put('/api/requests/:id', adminAuth, (req, res) => {
   const { status } = req.body;
   db.run('UPDATE requests SET status=? WHERE id=?', [status, req.params.id], function(err) {
     if (err) return res.status(500).json({ error: err.message });
@@ -67,18 +85,18 @@ app.put('/api/requests/:id', (req, res) => {
   });
 });
 
-app.get('/api/rooms', (req, res) => {
+app.get('/api/rooms', adminAuth, (req, res) => {
   db.all('SELECT * FROM rooms ORDER BY number', (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
 });
 
-app.post('/api/rooms', async (req, res) => {
+app.post('/api/rooms', adminAuth, async (req, res) => {
   const { number } = req.body;
   if (!number) return res.status(400).json({ error: 'number required' });
   try {
-    const url = `${req.protocol}://${req.headers.host}/client?room=${number}`;
+    const url = `${req.protocol}://${req.headers.host}/client/${number}`;
     const qr = await QRCode.toDataURL(url);
     db.run('INSERT INTO rooms (number, qr) VALUES (?,?)', [number, qr], function(err) {
       if (err) return res.status(500).json({ error: err.message });
@@ -98,7 +116,7 @@ app.get('/api/rooms/:room/requests', (req, res) => {
 
 app.get('/api/qrcode/:room', async (req, res) => {
   try {
-    const url = `${req.protocol}://${req.headers.host}/client?room=${req.params.room}`;
+    const url = `${req.protocol}://${req.headers.host}/client/${req.params.room}`;
     const qr = await QRCode.toDataURL(url);
     res.json({ qr });
   } catch (e) {

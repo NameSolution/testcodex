@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 const socket = io();
 
 export default function ClientApp() {
-  const params = new URLSearchParams(window.location.search);
-  const room = params.get('room') || '001';
+  const { room } = useParams();
   const [type, setType] = useState('room_service');
   const [message, setMessage] = useState('');
   const [requests, setRequests] = useState([]);

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
 import Requests from './Requests';
 import Rooms from './Rooms';
+import AdminLogin from './AdminLogin';
 
 function Layout() {
   return (
@@ -18,6 +19,10 @@ function Layout() {
 }
 
 export default function AdminApp() {
+  const [token, setToken] = useState(localStorage.getItem('adminToken'));
+
+  if (!token) return <AdminLogin onLogin={setToken} />;
+
   return (
     <Routes>
       <Route element={<Layout />}>

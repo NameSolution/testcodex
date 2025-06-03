@@ -23,7 +23,9 @@ npm run build
 npm start
 ```
 
-During development visit `http://localhost:5173/client?room=101` for the client interface and `http://localhost:5173/admin` for the admin dashboard. The admin area lets you manage service requests and create rooms with QR codes. A public info page is available at `/info`.
+During development visit `http://localhost:5173/client/101` for the client interface and `http://localhost:5173/admin` for the admin dashboard. The admin area lets you manage service requests, create rooms with QR codes and requires a password.
+Set the `ADMIN_PASS` environment variable to define this password (default: `admin`).
+The `/client/:room` path displays the interface for a specific room. A public info page is available at `/info`.
 
 Set the `PORT` environment variable to change the server port (defaults to `3001`).
 

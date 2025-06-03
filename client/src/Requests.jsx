@@ -5,17 +5,26 @@ const socket = io();
 
 export default function Requests() {
   const [requests, setRequests] = useState([]);
+  const token = localStorage.getItem('adminToken');
 
   useEffect(() => {
-    fetch('/api/requests').then(res => res.json()).then(setRequests);
-    socket.on('requests', setRequests);
+    fetch('/api/requests', { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res.json())
+      .then(setRequests);
+    const audio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=');
+    let current = [];
+    socket.on('requests', data => {
+      if (current.length && data.length > current.length) audio.play();
+      current = data;
+      setRequests(data);
+    });
     return () => socket.off('requests');
   }, []);
 
   function updateStatus(id, status) {
     fetch(`/api/requests/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ status })
     });
   }
