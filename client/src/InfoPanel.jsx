@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from './components/Card';
 
 const hotel = {
   name: 'Grand Codex Hotel',
@@ -11,7 +12,7 @@ const hotel = {
 export default function InfoPanel() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <div className="max-w-xl mx-auto bg-white shadow rounded p-6 space-y-4">
+      <Card className="max-w-xl mx-auto space-y-4">
         <h1 className="text-2xl font-bold">{hotel.name}</h1>
         <p>{hotel.description}</p>
         <div>
@@ -23,7 +24,7 @@ export default function InfoPanel() {
           </ul>
         </div>
         <p className="font-semibold">{hotel.contact}</p>
-      </div>
+      </Card>
     </div>
   );
 }

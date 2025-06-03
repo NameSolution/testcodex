@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply font-inter;
+  @apply font-inter bg-gray-100 min-h-screen;
 }

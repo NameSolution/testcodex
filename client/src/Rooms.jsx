@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Card from './components/Card';
+import Input from './components/Input';
+import Button from './components/Button';
 
 export default function Rooms() {
   const [rooms, setRooms] = useState([]);
@@ -32,21 +35,20 @@ export default function Rooms() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Rooms</h1>
-      <div className="bg-white p-4 shadow rounded flex space-x-2">
-        <input
-          className="border flex-1 p-2 rounded"
+      <Card className="flex space-x-2">
+        <Input
           placeholder="Room number"
           value={number}
           onChange={e => setNumber(e.target.value)}
         />
-        <button className="bg-blue-600 text-white px-4 rounded" onClick={addRoom}>Add</button>
-      </div>
+        <Button onClick={addRoom}>Add</Button>
+      </Card>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {rooms.map(r => (
-          <div key={r.id} className="bg-white shadow rounded p-4 space-y-2">
+          <Card key={r.id} className="space-y-2">
             <p className="font-medium">Room {r.number}</p>
             {r.qr && <img src={r.qr} alt="qr" className="w-32" />}
-          </div>
+          </Card>
         ))}
       </div>
     </div>
