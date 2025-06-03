@@ -1,12 +1,16 @@
-function AppLayout({ children }) {
+import { useState } from 'react';
+import Sidebar from './Sidebar';
+import Header from './Header';
+
+export default function AppLayout({ children }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="flex h-screen overflow-hidden font-outfit">
-      <aside className="w-64 bg-gray-100 p-4 hidden md:block">Sidebar</aside>
-      <div className="flex-1 overflow-y-auto">
-        <header className="border-b border-gray-200 p-4">TailAdmin</header>
-        <main className="p-4 bg-gray-50 min-h-screen">{children}</main>
+    <div className="flex h-screen overflow-hidden font-outfit bg-gray-50">
+      <Sidebar open={open} setOpen={setOpen} />
+      <div className="flex flex-1 flex-col">
+        <Header onMenu={() => setOpen(!open)} />
+        <main className="flex-1 overflow-y-auto p-4">{children}</main>
       </div>
     </div>
   );
 }
-export default AppLayout;
