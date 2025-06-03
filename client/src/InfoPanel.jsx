@@ -10,18 +10,20 @@ const hotel = {
 
 export default function InfoPanel() {
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{hotel.name}</h1>
-      <p>{hotel.description}</p>
-      <div>
-        <h2 className="text-xl mb-1">Amenities</h2>
-        <ul className="list-disc list-inside">
-          {hotel.amenities.map(a => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+      <div className="max-w-xl mx-auto bg-white shadow rounded p-6 space-y-4">
+        <h1 className="text-2xl font-bold">{hotel.name}</h1>
+        <p>{hotel.description}</p>
+        <div>
+          <h2 className="text-xl mb-1 font-semibold">Amenities</h2>
+          <ul className="list-disc list-inside space-y-1">
+            {hotel.amenities.map(a => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+        </div>
+        <p className="font-semibold">{hotel.contact}</p>
       </div>
-      <p className="font-semibold">{hotel.contact}</p>
     </div>
   );
 }

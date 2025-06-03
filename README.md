@@ -2,6 +2,8 @@
 
 Single Node.js application for hotel service requests and client information.
 
+The interface uses Tailwind CSS with a modern card-based design for a professional look.
+
 ## Installation
 
 ```
