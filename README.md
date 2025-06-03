@@ -2,7 +2,7 @@
 
 Single Node.js application for hotel service requests and client information.
 
-The interface uses Tailwind CSS with a modern card-based design for a professional look.
+The admin dashboard layout is based on the **TailAdmin** free React Tailwind template. The interface uses Tailwind CSS with a card-based design for a professional look.
 
 ## Installation
 
