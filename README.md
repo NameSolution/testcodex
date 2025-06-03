@@ -3,25 +3,25 @@
 ## Installation
 
 ```
-cd server && npm install
-cd ../client && npm install
+npm install
 ```
 
 ## Development
 
-Run backend:
+Start development:
 ```
-cd server && npm start
-```
-Run frontend:
-```
-cd client && npm run dev
+npm run dev
 ```
 
-Visit `http://localhost:5173/client?room=101` for client interface and `http://localhost:5173/admin` for admin dashboard.
+To serve the built app:
+```
+npm run build
+npm start
+```
+
+During development visit `http://localhost:5173/client?room=101` for the client interface and `http://localhost:5173/admin` for the admin dashboard.
 
 ## Deployment
 
-- Frontend can be deployed to Vercel using the `client` folder.
-- Backend can be deployed to Render or Railway running `node server.js`.
+- After `npm run build`, upload the `client/dist` folder with the server to your host.
 

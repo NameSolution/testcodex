@@ -71,12 +71,18 @@ app.get('/api/rooms/:room/requests', (req, res) => {
 
 app.get('/api/qrcode/:room', async (req, res) => {
   try {
-    const url = `http://localhost:5173/client?room=${req.params.room}`;
+    const url = `${req.protocol}://${req.headers.host}/client?room=${req.params.room}`;
     const qr = await QRCode.toDataURL(url);
     res.json({ qr });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+const staticPath = path.join(__dirname, '../client/dist');
+app.use(express.static(staticPath));
+app.use((_, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
