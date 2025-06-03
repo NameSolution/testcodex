@@ -24,6 +24,11 @@ db.serialize(() => {
     status TEXT DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+  db.run(`CREATE TABLE IF NOT EXISTS rooms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    number TEXT UNIQUE,
+    qr TEXT
+  )`);
 });
 
 io.on('connection', (socket) => {
@@ -60,6 +65,28 @@ app.put('/api/requests/:id', (req, res) => {
     broadcastUpdate();
     res.json({ updated: this.changes });
   });
+});
+
+app.get('/api/rooms', (req, res) => {
+  db.all('SELECT * FROM rooms ORDER BY number', (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+app.post('/api/rooms', async (req, res) => {
+  const { number } = req.body;
+  if (!number) return res.status(400).json({ error: 'number required' });
+  try {
+    const url = `${req.protocol}://${req.headers.host}/client?room=${number}`;
+    const qr = await QRCode.toDataURL(url);
+    db.run('INSERT INTO rooms (number, qr) VALUES (?,?)', [number, qr], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: this.lastID, qr });
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.get('/api/rooms/:room/requests', (req, res) => {

@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')).render(
   <Router>
     <Routes>
       <Route path="/client" element={<ClientApp />} />
-      <Route path="/admin" element={<AdminApp />} />
+      <Route path="/admin/*" element={<AdminApp />} />
       <Route path="/info" element={<InfoPanel />} />
       <Route path="/" element={<Navigate to="/client" replace />} />
     </Routes>
