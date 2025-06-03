@@ -1,7 +1,7 @@
 # Hotel Client Request Application
 
 Cette application gère les demandes clients dans un hôtel en temps réel.
-Tout est désormais regroupé dans un seul fichier Node.js qui sert l'interface et l'API.
+Le backend Express expose l'API et sert l'interface React compilée.
 
 ## Installation
 
@@ -13,16 +13,21 @@ Tout est désormais regroupé dans un seul fichier Node.js qui sert l'interface 
 1. Installez les dépendances :
    ```bash
    npm install
+   cd client && npm install
    ```
-2. Lancez l'application :
+2. Générez l'interface React :
    ```bash
+   npm run build
+   ```
+3. Revenez à la racine et lancez le serveur :
+   ```bash
+   cd ..
    npm start
    ```
-   Ouvrez ensuite `http://localhost:3000` dans votre navigateur pour accéder à l'interface.
+   Ouvrez ensuite `http://localhost:3001` (ou la valeur de `PORT`) pour accéder à l'application.
 
 ## Déploiement
-Vous pouvez exécuter `app.js` sur n'importe quel hébergeur Node.js (Render, Railway, etc.)
-ou simplement sur un VPS pour disposer à la fois de l'interface et de l'API.
+Déployez la build React sur un hébergeur statique (Vercel par exemple) ou servez-la via ce serveur Express sur Render ou Railway.
 
 ## Fonctionnement
 - Les clients soumettent des demandes (room service, ménage, maintenance, taxi...)
