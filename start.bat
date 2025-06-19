@@ -1,3 +1,3 @@
 @echo off
-py -3.11 telegram_bot.py
+py -3.11 gui.py
 pause

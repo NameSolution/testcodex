@@ -1,39 +1,57 @@
 import json, requests, textwrap, random
-from config import PERSONA_FILE, OLLAMA_URL, MODEL_NAME, TG_LINK
+from config import (
+    PERSONA_FILE,
+    OLLAMA_URL,
+    MODEL_NAME,
+    TG_LINK,
+    TEMPERATURE,
+)
 
 with open(PERSONA_FILE, "r", encoding="utf-8") as f:
     persona = json.load(f)
 
 EXAMPLES = persona["mes_example"].split("\n")
 SYSTEM = persona["data"]["system_prompt"]
+STORY = "\n".join([
+    persona.get("description", ""),
+    persona.get("personality", ""),
+    persona.get("scenario", ""),
+])
 
 def fewshot():
     return "\n".join([f"emy: {l}" for l in random.sample(EXAMPLES, 6)])
 
 def build_prompt(user_msg, history_pairs):
-    convo_lines = []
-    for u, e in history_pairs[-6:]:
-        convo_lines.append(f"user: {u}")
-        convo_lines.append(f"emy: {e}")
-    convo_lines.append(f"user: {user_msg}")
+    convo_lines = [f"user: {u}\nemy: {e}" for u, e in history_pairs[-6:]]
     convo_str = "\n".join(convo_lines)
-
-    prompt = textwrap.dedent(f"""
-        <s>[INST] <<SYS>>
-        {SYSTEM}
-        <</SYS>>
-
-        {fewshot()}
-        {convo_str}
-        emy: [/INST]
-    """).strip()
+    sys_json = json.dumps({"system": SYSTEM}, ensure_ascii=False)
+    prompt = "\n".join(
+        [
+            sys_json,
+            STORY,
+            "",
+            fewshot(),
+            "",
+            convo_str,
+            "### Instruction:",
+            user_msg,
+            "",
+            "### Response:",
+        ]
+    )
     return prompt
 
 def call_ollama(prompt):
-    payload = {"model": MODEL_NAME,
-               "prompt": prompt,
-               "stream": False,
-               "options": {"temperature": 0.7}}
+    payload = {
+        "model": MODEL_NAME,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "temperature": TEMPERATURE,
+            "top_p": 0.9,
+            "repeat_penalty": 1.1,
+        },
+    }
     r = requests.post(OLLAMA_URL, json=payload, timeout=90)
     r.raise_for_status()
     text = r.json()["response"].strip()

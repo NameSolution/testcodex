@@ -34,27 +34,35 @@ def show_memory(event=None):
     text.configure(state="disabled")
 
 
-root = tk.Tk()
-root.title("Bot Monitor")
+def main():
+    global root, user_list, text
 
-mainframe = ttk.Frame(root, padding=10)
-mainframe.grid(row=0, column=0, sticky="nsew")
-root.rowconfigure(0, weight=1)
-root.columnconfigure(0, weight=1)
+    root = tk.Tk()
+    root.title("Bot Monitor")
 
-user_list = tk.Listbox(mainframe, width=20)
-user_list.grid(row=0, column=0, sticky="ns")
-user_list.bind("<<ListboxSelect>>", show_memory)
+    mainframe = ttk.Frame(root, padding=10)
+    mainframe.grid(row=0, column=0, sticky="nsew")
+    root.rowconfigure(0, weight=1)
+    root.columnconfigure(0, weight=1)
 
-refresh_btn = ttk.Button(mainframe, text="Refresh", command=refresh_ids)
-refresh_btn.grid(row=1, column=0, pady=5)
+    user_list = tk.Listbox(mainframe, width=20)
+    user_list.grid(row=0, column=0, sticky="ns")
+    user_list.bind("<<ListboxSelect>>", show_memory)
 
-text = tk.Text(mainframe, width=60)
-text.grid(row=0, column=1, rowspan=2, sticky="nsew", padx=(10, 0))
-text.configure(state="disabled")
+    refresh_btn = ttk.Button(mainframe, text="Refresh", command=refresh_ids)
+    refresh_btn.grid(row=1, column=0, pady=5)
 
-mainframe.rowconfigure(0, weight=1)
-mainframe.columnconfigure(1, weight=1)
+    text = tk.Text(mainframe, width=60)
+    text.grid(row=0, column=1, rowspan=2, sticky="nsew", padx=(10, 0))
+    text.configure(state="disabled")
 
-refresh_ids()
-root.mainloop()
+    mainframe.rowconfigure(0, weight=1)
+    mainframe.columnconfigure(1, weight=1)
+
+    refresh_ids()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
+
