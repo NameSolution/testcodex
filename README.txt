@@ -19,7 +19,10 @@ Emy Telegram GFE Bot + LLM (Ollama nous-hermes2)
 4. Lancer :
    py -3.11 telegram_bot.py
 
-5. Fonctionnement :
+5. Surveiller :
+   python monitor.py
+
+6. Fonctionnement :
    - Le bot écoute Telegram
    - Chaque message passe par phase_tracker → funnel
    - reply_engine appelle Ollama local (http://localhost:11434) avec le prompt persona
@@ -31,5 +34,6 @@ Fichiers clés :
 ├─ reply_engine.py
 ├─ phase_tracker.py
 ├─ memory_manager.py
+├─ monitor.py
 ├─ personas/Emy_FINAL_GFE_SMS_v7.7.json
 └─ start.bat
