@@ -1,0 +1,6 @@
+BOT_TOKEN = "7549621577:AAFQhZZKKt67R74FGb3heCW_ycGrakWZApk"
+TG_LINK = "t.me/ChadSolution"
+PERSONA_FILE = "personas/Emy_FINAL_GFE_SMS_v7.7.json"
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "nous-hermes2:7b-dpo"
+MEMORY_DIR = "user_memory"
