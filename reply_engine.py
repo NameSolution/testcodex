@@ -18,7 +18,8 @@ def build_prompt(user_msg, history_pairs):
     convo_lines.append(f"user: {user_msg}")
     convo_str = "\n".join(convo_lines)
 
-    prompt = textwrap.dedent(f"""
+    prompt = textwrap.dedent(
+        f"""
         <s>[INST] <<SYS>>
         {SYSTEM}
         <</SYS>>
@@ -26,20 +27,9 @@ def build_prompt(user_msg, history_pairs):
         {fewshot()}
         {convo_str}
         emy: [/INST]
-    """).strip()
+    """
+    ).strip()
     return prompt
-    convo = []
-    for u,e in history_pairs[-6:]:
-        convo.append(f"user: {u}")
-        convo.append(f"emy: {e}")
-    convo.append(f"user: {user_msg}")
-    return textwrap.dedent(f"""<s>[INST] <<SYS>>
-{SYSTEM}
-<</SYS>>
-
-{fewshot()}
-{"\n".join(convo)}
-emy: [/INST]""").strip()
 
 def call_ollama(prompt):
     payload = {"model": MODEL_NAME,

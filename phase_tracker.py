@@ -1,4 +1,3 @@
-import re
 KEY = {
     2: ["music","movie","work","school","study","hobby"],
     3: ["cute","hot","sexy","kiss","flirt"],
