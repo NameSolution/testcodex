@@ -12,10 +12,9 @@ def load(uid):
                 data = json.load(f)
             except json.JSONDecodeError:
                 data = {}
-    if "history_pairs" not in data:
-        data["history_pairs"] = []
-    if "phase" not in data:
-        data["phase"] = 1
+    data.setdefault("history_pairs", [])
+    data.setdefault("phase", 1)
+    data.setdefault("profile", "curious")
     return data
 
 def save(uid, data):

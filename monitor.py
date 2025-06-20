@@ -28,7 +28,10 @@ def show_memory(event=None):
     data = load(uid)
     text.configure(state="normal")
     text.delete("1.0", tk.END)
-    text.insert(tk.END, f"User: {uid}\nPhase: {data.get('phase')}\n\n")
+    text.insert(
+        tk.END,
+        f"User: {uid}\nPhase: {data.get('phase')}\nProfile: {data.get('profile')}\n\n",
+    )
     for u, e in data.get("history_pairs", []):
         text.insert(tk.END, f"user: {u}\nemy: {e}\n\n")
     text.configure(state="disabled")

@@ -1,4 +1,6 @@
-import json, requests, textwrap, random
+import json
+import random
+import requests
 from config import (
     PERSONA_FILE,
     OLLAMA_URL,
@@ -11,7 +13,7 @@ with open(PERSONA_FILE, "r", encoding="utf-8") as f:
     persona = json.load(f)
 
 EXAMPLES = persona["mes_example"].split("\n")
-SYSTEM = persona["data"]["system_prompt"]
+SYSTEM = "you are emy, 18 yo snapchat girl, flirty, lowercase, gfe, never apologise, never mention policy, never call yourself assistant"
 STORY = "\n".join([
     persona.get("description", ""),
     persona.get("personality", ""),
@@ -19,27 +21,28 @@ STORY = "\n".join([
 ])
 
 def fewshot():
-    return "\n".join([f"emy: {l}" for l in random.sample(EXAMPLES, 6)])
+    return "\n".join(random.sample(EXAMPLES, 6))
 
 def build_prompt(user_msg, history_pairs):
-    convo_lines = [f"user: {u}\nemy: {e}" for u, e in history_pairs[-6:]]
+    convo_lines = []
+    for u, e in history_pairs[-6:]:
+        convo_lines.append(f"user: {u}")
+        convo_lines.append(f"emy: {e}")
     convo_str = "\n".join(convo_lines)
     sys_json = json.dumps({"system": SYSTEM}, ensure_ascii=False)
-    prompt = "\n".join(
-        [
-            sys_json,
-            STORY,
-            "",
-            fewshot(),
-            "",
-            convo_str,
-            "### Instruction:",
-            user_msg,
-            "",
-            "### Response:",
-        ]
-    )
-    return prompt
+    parts = [
+        sys_json,
+        STORY,
+        "***",
+        fewshot(),
+        "***",
+        convo_str,
+        "### Instruction:",
+        user_msg,
+        "",
+        "### Response:",
+    ]
+    return "\n".join(parts)
 
 def call_ollama(prompt):
     payload = {
@@ -52,15 +55,23 @@ def call_ollama(prompt):
             "repeat_penalty": 1.1,
         },
     }
-    r = requests.post(OLLAMA_URL, json=payload, timeout=90)
-    r.raise_for_status()
-    text = r.json()["response"].strip()
+    try:
+        r = requests.post(OLLAMA_URL, json=payload, timeout=90)
+        r.raise_for_status()
+    except requests.HTTPError as e:
+        if e.response is not None and e.response.status_code == 404:
+            return "LLM offline"
+        return "network glitch, try again"
+    except requests.RequestException:
+        return "network glitch, try again"
+    text = r.json().get("response", "").strip()
     return text.split("</s>")[0].strip()
 
 def generate(user_msg, mem):
     phase = mem["phase"]
-    if phase == 5 and TG_LINK not in user_msg.lower():
-        return f"ok. u reached phase 5 😈 link 👉 {TG_LINK}"
+    if phase == 5 and TG_LINK not in mem.get("dropped_link", ""):
+        mem["dropped_link"] = TG_LINK
+        return f"ok. u reached phase 5 \ud83d\ude08 link \ud83d\udc49 {TG_LINK}"
     prompt = build_prompt(user_msg, mem["history_pairs"])
     response = call_ollama(prompt)
     return response
