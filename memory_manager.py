@@ -15,6 +15,7 @@ def load(uid):
     data.setdefault("history_pairs", [])
     data.setdefault("phase", 1)
     data.setdefault("profile", "curious")
+    data.setdefault("dropped_link", False)
     return data
 
 def save(uid, data):

@@ -7,8 +7,8 @@ Simple Telegram girlfriend experience bot powered by a local Ollama model.
 2. Launch `start.bat` which opens the GUI.
 3. Enter your Telegram bot token, adjust the model name or temperature if needed and hit **Save**.
 4. Use **Start Bot** to begin polling Telegram. **Stop Bot** stops it.
-5. **Monitor Memory** lets you inspect stored conversations. **Open Ollama Log** opens the local model log file.
-6. A status line shows the latest reply along with phase and profile.
+5. **Monitor Memory** lets you inspect stored conversations. **Reset Learning** clears the bandit scores.
+6. A status line shows the latest reply along with phase, profile and average score.
 
 ## How it works
 - Incoming messages are checked by `phase_tracker.detect` to move through phases 1‑5 (see `gfe_phases.md`).

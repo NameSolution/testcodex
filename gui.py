@@ -6,6 +6,10 @@ from tkinter import ttk, messagebox
 
 import config
 from memory_manager import load
+from selector import Selector
+from phase_tracker import FUNNEL
+
+selector = Selector(FUNNEL)
 
 bot_process = None
 
@@ -50,17 +54,10 @@ def stop_bot():
         messagebox.showinfo("Info", "Bot is not running")
 
 
-def open_log():
-    path = 'ollama.log'
-    if not os.path.exists(path):
-        messagebox.showwarning("Warning", "ollama.log not found")
-        return
-    if sys.platform.startswith('win'):
-        os.startfile(path)
-    elif sys.platform.startswith('darwin'):
-        subprocess.Popen(['open', path])
-    else:
-        subprocess.Popen(['xdg-open', path])
+def reset_learning():
+    if messagebox.askyesno("Reset", "Reset bandit learning?"):
+        selector.reset()
+        messagebox.showinfo("Reset", "Learning reset")
 
 
 def open_monitor():
@@ -125,8 +122,8 @@ token_entry.grid(row=0, column=1, sticky="ew")
 
 ttk.Label(main, text="Model Name:").grid(row=1, column=0, sticky="e")
 model_var = tk.StringVar(value=config.MODEL_NAME)
-model_entry = ttk.Entry(main, width=40, textvariable=model_var)
-model_entry.grid(row=1, column=1, sticky="ew")
+model_menu = ttk.OptionMenu(main, model_var, model_var.get(), "dolphin-phi:2.7b", "dolphin-mixtral")
+model_menu.grid(row=1, column=1, sticky="ew")
 
 ttk.Label(main, text="Temperature:").grid(row=2, column=0, sticky="e")
 temp_var = tk.StringVar(value=str(config.TEMPERATURE))
@@ -151,8 +148,8 @@ start_btn.grid(row=0, column=1, padx=5)
 stop_btn = ttk.Button(btn_frame, text="Stop Bot", command=stop_bot)
 stop_btn.grid(row=0, column=2, padx=5)
 
-log_btn = ttk.Button(btn_frame, text="Open Ollama Log", command=open_log)
-log_btn.grid(row=0, column=3, padx=5)
+reset_btn = ttk.Button(btn_frame, text="Reset Learning", command=reset_learning)
+reset_btn.grid(row=0, column=3, padx=5)
 
 monitor_btn = ttk.Button(btn_frame, text="Monitor Memory", command=open_monitor)
 monitor_btn.grid(row=0, column=4, padx=5)
@@ -180,7 +177,10 @@ def update_status():
             phase = data.get("phase")
             profile = data.get("profile")
             last = data.get("history_pairs", [])[-1][1] if data.get("history_pairs") else ""
-            status_var.set(f"User {uid}: phase {phase}, profile {profile}\nLast: {last}")
+            score = selector.average_score()
+            status_var.set(
+                f"User {uid}: phase {phase}, profile {profile}, score {score:.2f}\nLast: {last}"
+            )
     except Exception as exc:
         status_var.set(str(exc))
     root.after(5000, update_status)

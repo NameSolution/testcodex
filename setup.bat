@@ -5,6 +5,5 @@ py -3.11 -m pip install python-telegram-bot==20.7 requests
 if not exist "%USERPROFILE%\AppData\Local\Programs\Ollama" (
     winget install ollama.ollama
 )
-for /f "delims=" %%M in ('py -3.11 -c "import config,sys;print(config.MODEL_NAME)"') do set MODEL=%%M
-ollama pull %MODEL%
+ollama pull dolphin-phi:2.7b
 
