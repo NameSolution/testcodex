@@ -12,7 +12,8 @@ async def handle(update, context):
     msg = update.message.text or ""
     mem = load(uid)
     mem["phase"] = detect(msg, mem)
-    reply = generate(msg, mem)
+    now_ts = update.message.date.timestamp()
+    reply = generate(msg, mem, now_ts)
     mem["history_pairs"].append((msg, reply))
     save(uid, mem)
     await update.message.reply_text(reply)
